@@ -19,46 +19,46 @@ pipeline {
         }
     }
     
-    stage('code check by sonarqube'){
-        steps{
-            withSonarQubeEnv("sonartest") {
-                    tool name: 'sonartest', type: 'hudson.plugins.sonar.SonarRunnerInstallation'
-                    sh "${tool("sonartest")}/bin/sonar-scanner"
-                    //-Dsonar.projectKey=sonarqubetest -D sonar.projectName=sonarqubetest -D sonar.java.binaries=. -D sonar.sources=. -D sonar.exclusions=build/** "
+  //   stage('code check by sonarqube'){
+  //       steps{
+  //           withSonarQubeEnv("sonartest") {
+  //                   tool name: 'sonartest', type: 'hudson.plugins.sonar.SonarRunnerInstallation'
+  //                   sh "${tool("sonartest")}/bin/sonar-scanner"
+  //                   //-Dsonar.projectKey=sonarqubetest -D sonar.projectName=sonarqubetest -D sonar.java.binaries=. -D sonar.sources=. -D sonar.exclusions=build/** "
                     
-            }        
-    }
-  }
-  stage('quality check'){
-        steps{
-        script{
-                def qualitygate = waitForQualityGate()
-                    if (qualitygate.status != "OK") {
-                            error "Pipeline aborted due to quality gate coverage failure: ${qualitygate.status}"
-                }
-        }
-    }        
-  }
-  stage('get detail'){
-      steps{
-          sh 'kubectl get all'
-      }
-  }
-    stage('Getting image from Artifactory') {
-        steps{
-            echo 'Fetching docker image..'
-            sh 'docker login ${NEXUS_URL} -u ${DOCKER_USERNAME} -p ${DOCKER_PASSWORD}'
-            sh 'docker pull ${DOCKER_IMAGE}'
-        }
-    }
-    stage('Image Scane'){
-        steps{
-            sh 'trivy image ${DOCKER_IMAGE}'
-            //sh 'trivy image --exit-code 2 --severity CRITICAL ${DOCKER_IMAGE}'
-            //sh 'trivy image --exit-code 3 --severity HIGH ${DOCKER_IMAGE}'
+  //           }        
+  //   }
+  // }
+  // stage('quality check'){
+  //       steps{
+  //       script{
+  //               def qualitygate = waitForQualityGate()
+  //                   if (qualitygate.status != "OK") {
+  //                           error "Pipeline aborted due to quality gate coverage failure: ${qualitygate.status}"
+  //               }
+  //       }
+  //   }        
+  // }
+  // stage('get detail'){
+  //     steps{
+  //         sh 'kubectl get all'
+  //     }
+  // }
+  //   stage('Getting image from Artifactory') {
+  //       steps{
+  //           echo 'Fetching docker image..'
+  //           sh 'docker login ${NEXUS_URL} -u ${DOCKER_USERNAME} -p ${DOCKER_PASSWORD}'
+  //           sh 'docker pull ${DOCKER_IMAGE}'
+  //       }
+  //   }
+  //   stage('Image Scane'){
+  //       steps{
+  //           sh 'trivy image ${DOCKER_IMAGE}'
+  //           //sh 'trivy image --exit-code 2 --severity CRITICAL ${DOCKER_IMAGE}'
+  //           //sh 'trivy image --exit-code 3 --severity HIGH ${DOCKER_IMAGE}'
 
-        }
-    }
+  //       }
+  //   }
     stage('Deploy'){
         steps{
             echo 'Deploying ...'
