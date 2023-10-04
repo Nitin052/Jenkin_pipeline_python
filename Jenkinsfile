@@ -63,9 +63,10 @@ pipeline {
         steps{
             echo 'Deploying ...'
            // sh 'kubectl apply -f secret.yml'
-            sh 'kubectl create secret docker-registry nexus-secret --docker-server=${NEXUS_URL} --docker-username=${DOCKER_USERNAME} --docker-password=${DOCKER_PASSWORD}'
+           // sh 'kubectl create secret docker-registry nexus-secret --docker-server=${NEXUS_URL} --docker-username=${DOCKER_USERNAME} --docker-password=${DOCKER_PASSWORD}'
             sh 'kubectl apply -f deployment.yml'
             sh 'kubectl apply -f service.yml'
+            sh 'kubectl port-forward --address 0.0.0.0 service/flask-app-service 5001:5080'
 
         }
     }
