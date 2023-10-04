@@ -62,7 +62,8 @@ pipeline {
     stage('Deploy'){
         steps{
             echo 'Deploying ...'
-            sh 'kubectl apply -f secret.yml'
+           // sh 'kubectl apply -f secret.yml'
+            sh 'kubectl -- create secret docker-registry nexus-secret --docker-server=${NEXUS_URL} --docker-username=${DOCKER_USERNAME} --docker-password=${DOCKER_PASSWORD}'
             sh 'kubectl apply -f deployment.yml'
             sh 'kubectl apply -f service.yml'
 
