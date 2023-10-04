@@ -12,7 +12,7 @@ pipeline {
     stages{
     stage('Pre-req'){
         steps{
-            sh 'minikube delete'
+          //  sh 'minikube delete'
             sh 'minikube start --driver docker'
             sh 'eval $(minikube docker-env)'
             git url: 'https://github.com/Nitin052/Jenkin_pipeline_python.git',branch: 'main'
